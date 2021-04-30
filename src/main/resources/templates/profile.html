@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    }
+
+
+    header {
+    width: 100%;
+    height: 12vh;
+    background: white;
+
+    }
+
+    nav {
+    margin-left: 10%;
+    }
+
+    nav ul {
+    display: flex;
+    padding: 40px;
+    justify-content: space-between;
+    }
+
+    nav ul li {
+    list-style: none;
+    }
+
+    nav ul li a {
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 15px;
+    text-align:center;
+    }
+
+   </style>
+
+
+</head>
+<body style="background-image: url('https://i.stack.imgur.com/jGlzr.png'); background-repeat: no-repeat;
+  background-size: cover">
+<header th:insert="header.html :: header"></header>
+
+
+<h2 style="text-align:center; color:white; font-size:xx-large">Welcome, <span th:text="${user.firstName}"></span>!</h2>
+
+
+<div style="text-align:center; margin-left:auto; margin-right:auto; border: 4px solid white; width:500px; margin-bottom:20px">
+    <br>
+    <br>
+    <br>
+    <img style="text-align:center; margin-left:auto; margin-right:auto; border-radius:15px" src="https://www.tnmc.go.tz/images/2020/avatar.jpg">
+    <h3 style="color:white; font-size:xx-large">Your Information</h3>
+    <p style="color:white; font-size:x-large">User Name: <span th:text="${user.username}"></span></p>
+    <p style="color:white; font-size:x-large">First Name: <span th:text="${user.firstName}"></span></p>
+    <p style="color:white; font-size:x-large">Last Name: <span th:text="${user.lastName}"></span></p>
+    <p style="color:white; font-size:x-large">Date of Birth: <span th:text="${user.dateOfBirth}"></span></p>
+    <p style="color:white; font-size:x-large">Bio: <span th:text="${user.bio}"></span></p>
+</div>
+
+
+</body>
+</html>
