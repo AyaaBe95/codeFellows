@@ -48,13 +48,13 @@
 <header th:insert="header.html :: header"></header>
 
 
-<div style="text-align:center; margin-left:auto; margin-right:auto;  width:500px; margin-bottom:20px">
-    <h1>Welcome to [[${viewedUser.firstname}]] 's profile</h1>
+<div style="text-align:center; margin-left:auto; margin-right:auto;  width:750px; margin-bottom:20px">
+    <h1>Welcome to [[${user.firstname}]] 's profile</h1>
     <p style="color:white; font-size:x-large">My information:</p>
-    <p style="color:white; font-size:x-large">First name: [[${viewedUser.firstname}]]</p>
-    <p style="color:white; font-size:x-large">Last name [[${viewedUser.lastname}]]</p>
-    <p style="color:white; font-size:x-large">Date of birth: [[${viewedUser.dateofbirth}]]</p>
-    <p style="color:white; font-size:x-large">Bio: [[${viewedUser.bio}]]</p>
+    <p style="color:white; font-size:x-large"> First name: <span th:text="${user.username}"></span></p>
+    <p style="color:white; font-size:x-large">Last name <span th:text="${user.lastname}"></span></p>
+    <p style="color:white; font-size:x-large">Date of birth: <span th:text="${user.dateOfBirth}"></span></p>
+    <p style="color:white; font-size:x-large">Bio: <span th:text="${user.bio}"></span></p>
 
 
 
@@ -63,7 +63,7 @@
     <br>
     <br>
     <ul>
-        <li th:each="post : ${viewedUser.posts}" th:text="${post}"></li>
+        <li th:each="post : ${user.posts}" th:text="${post}"></li>
     </ul>
 </div>
 
