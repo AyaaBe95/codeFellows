@@ -5,83 +5,79 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 public class ApplicationUser implements UserDetails {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
-    @Column(unique = true)
-    private String username;
-    private String password;
-    private String firstName;
-    private String lastName;
-    private String dateOfBirth;
-    private String bio;
+    long id;
 
-    public ApplicationUser(){
+    String username;
+    String password;
+    String firstname;
+    String lastname;
+    String dateofbirth;
+    String bio;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner")
+    List<Post> posts;
+
+    @ManyToMany
+    @JoinTable(
+            name="posters_and_followers",
+            joinColumns = { @JoinColumn(name="follower") },
+            inverseJoinColumns = { @JoinColumn(name = "poster")}
+    )
+    Set<ApplicationUser> usersIFollow;
+
+    @ManyToMany(mappedBy = "usersIFollow")
+    Set<ApplicationUser> usersFollowingMe;
+
+    public void followUser(ApplicationUser followedUser){
+
+        usersIFollow.add(followedUser);
     }
 
-    public ApplicationUser( String userName, String password, String firstName, String lastName, String dateOfBirth, String bio) {
-        this.username = userName;
+    public ApplicationUser() {}
+
+    public ApplicationUser(String username,
+                           String password,
+                           String firstname,
+                           String lastname,
+                           String dateofbirth,
+                           String bio) {
+        this.username = username;
         this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.dateOfBirth = dateOfBirth;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.dateofbirth = dateofbirth;
         this.bio = bio;
     }
 
-    public int getId() {
-        return id;
+    public List<Post> getPosts() {
+        return posts;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public String getFirstname() {
+        return firstname;
     }
 
-
-    public void setUsername(String userName) {
-        this.username = userName;
+    public String getLastname() {
+        return lastname;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(String dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public String getDateofbirth() {
+        return dateofbirth;
     }
 
     public String getBio() {
         return bio;
     }
 
-    public void setBio(String bio) {
-        this.bio = bio;
-    }
+    public long getId() { return id; }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -116,5 +112,23 @@ public class ApplicationUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "ApplicationUser{" +
+                "firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", dateofbirth='" + dateofbirth + '\'' +
+                ", bio='" + bio + '\'' +
+                '}';
+    }
+
+    public Set<ApplicationUser> getUsersIFollow() {
+        return usersIFollow;
+    }
+
+    public Set<ApplicationUser> getUsersFollowingMe() {
+        return usersFollowingMe;
     }
 }
