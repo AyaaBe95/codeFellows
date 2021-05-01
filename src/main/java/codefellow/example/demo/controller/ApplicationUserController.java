@@ -1,92 +1,134 @@
-package codefellow.example.demo.controller;
+package codefellow.example.demo.model;
 
-import codefellow.example.demo.model.ApplicationUser;
-import codefellow.example.demo.repository.ApplicationUserRepository;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.security.Principal;
-import java.util.ArrayList;
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
-@Controller
-public class ApplicationUserController {
-    @Autowired private PasswordEncoder passwordEncoder;
+@Entity
+public class ApplicationUser implements UserDetails {
 
-    @Autowired
-    ApplicationUserRepository applicationUserRepository;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    long id;
 
-    @PostMapping("/signup")
-    public RedirectView signup(String username,
-                               String password,
-                               String firstname,
-                               String lastname,
-                               String dateofbirth,
-                               String bio) {
+    String username;
+    String password;
+    String firstname;
+    String lastname;
+    String dateofbirth;
+    String bio;
 
-        if (applicationUserRepository.findByUsername(username) == null) {
-            ApplicationUser u = new ApplicationUser(username, passwordEncoder.encode(password), firstname, lastname, dateofbirth, bio);
-            applicationUserRepository.save(u);
-            Authentication authentication = new UsernamePasswordAuthenticationToken(u, null, new ArrayList<>());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner")
+    List<Post> posts;
 
-            return new RedirectView("/");
-        } else {
-            return new RedirectView("/signup?taken=true");
-        }
+    @ManyToMany
+    @JoinTable(
+            name="posters_and_followers",
+            joinColumns = { @JoinColumn(name="follower") },
+            inverseJoinColumns = { @JoinColumn(name = "poster")}
+    )
+    Set<ApplicationUser> usersIFollow;
+
+    @ManyToMany(mappedBy = "usersIFollow")
+    Set<ApplicationUser> usersFollowingMe;
+
+    public void followUser(ApplicationUser followedUser){
+
+        usersIFollow.add(followedUser);
     }
 
-    @GetMapping("/signup")
-    public String getSignupPage() {
-        return "signup";
+    public ApplicationUser() {}
+
+    public ApplicationUser(String username,
+                           String password,
+                           String firstname,
+                           String lastname,
+                           String dateofbirth,
+                           String bio) {
+        this.username = username;
+        this.password = password;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.dateofbirth = dateofbirth;
+        this.bio = bio;
     }
 
-    @GetMapping("/login")
-    public String getLoginPage() {
-        return "login";
+    public List<Post> getPosts() {
+        return posts;
     }
 
-    @GetMapping("/user/{id}")
-    public String showUser(@PathVariable long id, Principal p, Model m) {
-
-        ApplicationUser user = applicationUserRepository.findById(id).get();
-        m.addAttribute("viewedUser", user);
-        m.addAttribute("username", p.getName());
-        return "userProfile";
+    public String getFirstname() {
+        return firstname;
     }
 
-    @GetMapping("/userProfile")
-    public String showCurrentUser(Principal p, Model m) {
-        m.addAttribute("viewedUser", applicationUserRepository.findByUsername(p.getName()));
-        m.addAttribute("username", p.getName());
-        return "userProfile";
+    public String getLastname() {
+        return lastname;
     }
 
-    @GetMapping("/users")
-    public String getAllUsers(Principal p, Model m) {
-        m.addAttribute("username", p.getName());
-        m.addAttribute("users", applicationUserRepository.findAll());
-
-        return "allUsers";
+    public String getDateOfBirth() {
+        return dateofbirth;
     }
 
-    @PostMapping ("/follow")
-    public RedirectView followUser(Principal p, long followUser) {
+    public String getBio() {
+        return bio;
+    }
 
-        ApplicationUser follower = applicationUserRepository.findByUsername(p.getName());
-        ApplicationUser poster = applicationUserRepository.getOne(followUser);
-        follower.followUser(poster);
+    public long getId() { return id; }
 
-        applicationUserRepository.save(follower);
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
 
-        return new RedirectView("/userProfile");
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "ApplicationUser{" +
+                "firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", dateofbirth='" + dateofbirth + '\'' +
+                ", bio='" + bio + '\'' +
+                '}';
+    }
+
+    public Set<ApplicationUser> getUsersIFollow() {
+        return usersIFollow;
+    }
+
+    public Set<ApplicationUser> getUsersFollowingMe() {
+        return usersFollowingMe;
     }
 }
