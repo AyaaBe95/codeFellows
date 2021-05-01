@@ -61,14 +61,14 @@ public class ApplicationUserController {
         ApplicationUser user = applicationUserRepository.findById(id).get();
         m.addAttribute("user", user);
         m.addAttribute("username", p.getName());
-        return "userProfile";
+        return "userprofile";
     }
 
-    @GetMapping("/userProfile")
+    @GetMapping("/userprofile")
     public String showCurrentUser(Principal p, Model m) {
         m.addAttribute("user", applicationUserRepository.findByUsername(p.getName()));
         m.addAttribute("username", p.getName());
-        return "userProfile";
+        return "userprofile";
     }
 
     @GetMapping("/users")
