@@ -69,7 +69,7 @@ public class ApplicationUser implements UserDetails {
         return lastname;
     }
 
-    public String getDateofbirth() {
+    public String getDateOfBirth() {
         return dateofbirth;
     }
 
