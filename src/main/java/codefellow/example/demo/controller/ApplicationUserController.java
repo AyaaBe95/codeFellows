@@ -71,12 +71,12 @@ public class ApplicationUserController {
         return "userprofile";
     }
 
-    @GetMapping("/users")
+    @GetMapping("/allUsers")
     public String getAllUsers(Principal p, Model m) {
         m.addAttribute("username", p.getName());
         m.addAttribute("users", applicationUserRepository.findAll());
 
-        return "allusers";
+        return "allUsers";
     }
 
     @PostMapping ("/follow")

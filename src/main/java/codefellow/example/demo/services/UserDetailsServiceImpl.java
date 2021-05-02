@@ -1,5 +1,6 @@
 package codefellow.example.demo.services;
 
+
 import codefellow.example.demo.model.ApplicationUser;
 import codefellow.example.demo.repository.ApplicationUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

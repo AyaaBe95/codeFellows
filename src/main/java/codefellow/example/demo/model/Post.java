@@ -1,6 +1,5 @@
 package codefellow.example.demo.model;
 
-
 import javax.persistence.*;
 
 @Entity
