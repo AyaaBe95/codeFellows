@@ -38,16 +38,4 @@ class DemoApplicationTests {
 		this.mockMvc.perform(get("/login")).andDo(print()).andExpect(status().isOk());
 	}
 
-//	@Test
-//	public void testSignupPageResult() throws Exception {
-//		this.mockMvc.perform(get("/signup")).andDo(print()).andExpect(status().isOk())
-//				.andExpect(content().string(containsString("<div class=\"imgcontainer\">")));
-//	}
-//
-//	@Test
-//	public void testLoginResult() throws Exception {
-//		this.mockMvc.perform(get("/login")).andDo(print()).andExpect(status().isOk())
-//				.andExpect(content().string(containsString("<form method=\"POST\" action=\"/login\">")));
-//	}
-
 }
